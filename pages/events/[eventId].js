@@ -1,16 +1,20 @@
 import EventContent from "@/components/event-detail/event-content";
 import EventLogistics from "@/components/event-detail/event-logistics";
 import EventSummary from "@/components/event-detail/event-summary";
-import { getEventById } from "@/dummy-data";
-import { useRouter } from "next/router";
+import {
+  getAllEvents,
+  getEventById,
+  getFeaturedEvents,
+} from "@/helpers/api-utils";
 import { Fragment } from "react";
 
-const EventDetailPage = () => {
-  const router = useRouter();
-
-  const eventId = router.query.eventId;
-  const event = getEventById(eventId);
+const EventDetailPage = (props) => {
+  const event = props.event[0];
   // console.log(event);
+
+  // Now this is not required as we are pre0rendering the data in the backend;
+  // const eventId = router.query.eventId;
+  // const event = getEventById(eventId);
 
   // If event is not present
   if (!event) {
@@ -32,5 +36,24 @@ const EventDetailPage = () => {
     </Fragment>
   );
 };
+
+export async function getStaticProps(context) {
+  // const { params } = context;
+  const eventId = context.params.eventId;
+  const event = await getEventById(eventId);
+  return {
+    props: {
+      event: event,
+    },
+    revalidate: 30,
+  };
+}
+
+export async function getStaticPaths() {
+  // Now getting all the pages is sure waste of time and resources, so we will just get the feature events. But now you have to make fallback true as for the pages that are not pre-rendered, it will show 404 page;
+  const allEvents = await getFeaturedEvents();
+  const paths = allEvents.map((event) => ({ params: { eventId: event.id } }));
+  return { paths: paths, fallback: "blocking" };
+}
 
 export default EventDetailPage;
