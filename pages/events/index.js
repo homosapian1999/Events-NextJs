@@ -4,6 +4,7 @@ import EventSearch from "@/components/events/event-search";
 import { getAllEvents } from "@/helpers/api-utils";
 // import { getAllEvents } from "@/dummy-data";
 import { useRouter } from "next/router";
+import Head from "next/head";
 
 const AllEventsPage = (props) => {
   // Now we do not require this;
@@ -16,6 +17,13 @@ const AllEventsPage = (props) => {
   };
   return (
     <Fragment>
+      <Head>
+        <title>All Events</title>
+        <meta
+          name="description"
+          content="Page with events that help you grow"
+        />
+      </Head>
       <EventSearch onSearch={findEventsHandler} />
       <EventList items={events} />
     </Fragment>

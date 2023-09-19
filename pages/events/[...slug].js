@@ -1,6 +1,7 @@
 import EventList from "@/components/events/event-list";
 import ResultsTitle from "@/components/events/results-title";
 import { getFilteredEvents } from "@/helpers/api-utils";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import React, { Fragment, useEffect, useState } from "react";
 import useSWR from "swr";
@@ -78,6 +79,13 @@ const FilteredEventPage = (props) => {
 
   return (
     <Fragment>
+      <Head>
+        <title>Filtered Events</title>
+        <meta
+          name="description"
+          content="Page with events that help you grow"
+        />
+      </Head>
       <ResultsTitle date={date} />
       <EventList items={filteredEvents} />
     </Fragment>
